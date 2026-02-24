@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Demo.Models.Entities;
 
-public class ProductCategorys
+public class ProductCategories
 {
     public int Id { get; set; }
     public string ProductCategoryName { get; set; }
