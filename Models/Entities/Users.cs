@@ -13,5 +13,5 @@ public class Users
     public string Login { get; set; }
     public string Password { get; set; }
     public virtual Roles Role { get; set; }
-    public string RoleId { get; set; }
+    public int RoleId { get; set; }
 }
