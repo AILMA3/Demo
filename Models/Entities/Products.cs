@@ -12,6 +12,7 @@ namespace Demo.Models.Entities;
 public class Products
 {
     [Key]
+    public int Id { get; set; }
     public string Article { get; set; }
     public virtual ProductNames ProductNames { get; set; }
     public int NameId { get; set; }
