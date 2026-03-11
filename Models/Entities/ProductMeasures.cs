@@ -9,6 +9,6 @@ namespace Demo.Models.Entities;
 public class ProductMeasures
 {
     public int Id { get; set; }
-    public string ProductMeasureName { get; set; }
+    public string Name { get; set; }
 }
 

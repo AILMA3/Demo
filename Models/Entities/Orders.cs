@@ -10,7 +10,7 @@ public class Orders
 {
     public int Id { get; set; }
     public DateOnly OrderDate { get; set; }
-    public DateOnly Deliverydate { get; set; }
+    public DateOnly DeliveryDate { get; set; }
     public virtual PickupPoints PickupPoint { get; set; }
     public int PickupPointId { get; set; }
     public virtual Users User { get; set; }

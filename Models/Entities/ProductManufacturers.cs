@@ -9,6 +9,6 @@ namespace Demo.Models.Entities;
 public class ProductManufacturers
 {
     public int Id { get; set; }
-    public string ProductManufacturerName { get; set; }
+    public string Name { get; set; }
 }
 

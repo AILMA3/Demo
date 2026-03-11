@@ -9,6 +9,6 @@ namespace Demo.Models.Entities;
 public class ProductNames
 {
     public int Id { get; set; }
-    public string ProductName { get; set; }
+    public string Name { get; set; }
 }
 

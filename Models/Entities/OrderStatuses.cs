@@ -9,6 +9,6 @@ namespace Demo.Models.Entities;
 public class OrderStatuses
 {
     public int Id { get; set; }
-    public int StatusName { get; set; }
+    public int Name { get; set; }
 }
 
