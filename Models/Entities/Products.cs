@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.RightsManagement;
 using System.Text;
@@ -29,5 +30,17 @@ public class Products
     public int Count { get; set; }
     public string Description { get; set; }
     public string? PhotoName { get; set; }
+
+    [NotMapped]
+    public decimal FinalPrice => Price - Price * Discount / 100;
+
+    [NotMapped]
+    public bool HasDiscount => Discount > 0;
+
+    [NotMapped]
+    public bool IsOutOfStock => Count == 0;
+
+    [NotMapped]
+    public bool IsHighDiscount => Discount > 15;
 }
 

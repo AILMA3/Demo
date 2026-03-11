@@ -5,8 +5,176 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Demo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Главная - Список товаров" Height="600" Width="900">
+    
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+            <TextBlock x:Name="txtUserInfo" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Button Content="Выход" Width="80" Height="30" Click="BtnLogout_Click"/>
+        </StackPanel>
+
+        <Border x:Name="panelFilters"
+                Grid.Row="1"
+                Background="#F0F0F0"
+                Padding="10"
+                Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="txtSearch"
+                         Grid.Column="0"
+                         Height="30"
+                         Margin="0,0,10,0"
+                         Padding="5"
+                         TextChanged="txtSearch_TextChanged"
+                         ToolTip="Поиск по названию, описанию, производителю..."/>
+
+                <ComboBox x:Name="cmbSort"
+                          Grid.Column="1"
+                          Width="150"
+                          Height="30"
+                          Margin="0,0,10,0"
+                          SelectionChanged="cmbSort_SelectionChanged">
+                    <ComboBoxItem Tag="0">Без сортировки</ComboBoxItem>
+                    <ComboBoxItem Tag="1">Количество (по возрастанию)</ComboBoxItem>
+                    <ComboBoxItem Tag="2">Количество (по убыванию)</ComboBoxItem>
+                </ComboBox>
+
+                <ComboBox x:Name="cmbSupplierFilter"
+                          Grid.Column="2"
+                          Width="150"
+                          Height="30"
+                          SelectionChanged="cmbSupplierFilter_SelectionChanged"/>
+            </Grid>
+        </Border>
+
+        <ListBox x:Name="listProducts"
+                 Grid.Row="2"
+                 SelectionChanged="listProducts_SelectionChanged">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Width="850">
+
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <!-- Если товара нет на складе - голубой фон -->
+                                    <DataTrigger Binding="{Binding IsOutOfStock}" Value="True">
+                                        <Setter Property="Background" Value="#ADD8E6"/>
+                                    </DataTrigger>
+                                    <!-- Если скидка > 15% - зеленый фон -->
+                                    <DataTrigger Binding="{Binding IsHighDiscount}" Value="True">
+                                        <Setter Property="Background" Value="#2E8B57"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="120"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0">
+                                <Image Source="{Binding DisplayImagePath}"/>
+                            </Border>
+
+                            <StackPanel Grid.Column="1">
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding ProductCategory.Name}" FontWeight="Bold"/>
+                                    <TextBlock Text=" | "/>
+                                    <TextBlock Text="{Binding ProductNames.Name}" FontWeight="Bold"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Описание товара: "/>
+                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                                </StackPanel>
+
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Производитель: "/>
+                                    <TextBlock Text="{Binding ProductManufacturer.Name}"/>
+                                </StackPanel>
+
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Поставщик: "/>
+                                    <TextBlock Text="{Binding ProductSupplier.Name}"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Цена: "/>
+
+                                    <!-- Если есть скидка -->
+                                    <StackPanel Orientation="Horizontal" 
+                                   Visibility="{Binding HasDiscount, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:F2} ₽}" 
+                                       Foreground="Red"
+                                       TextDecorations="Strikethrough"/>
+                                        <TextBlock Text="{Binding FinalPrice, StringFormat={}{0:F2} ₽}" 
+                                       FontWeight="Bold"/>
+                                    </StackPanel>
+
+                                    <!-- Если нет скидки -->
+                                    <TextBlock Text="{Binding Price, StringFormat={}{0:F2} ₽}" 
+                                   FontWeight="Bold"
+                                   Visibility="{Binding HasDiscount, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Единица измерения: "/>
+                                    <TextBlock Text="{Binding ProductMeasure.Name}"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Количество на складе: "/>
+                                    <TextBlock Text="{Binding Count}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Скидка -->
+                            <StackPanel Grid.Column="2" 
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Visibility="{Binding HasDiscount, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                
+                                <TextBlock Text="Действующая скидка" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding Discount, StringFormat={}{0:F0}%}" FontSize="20" HorizontalAlignment="Center"/>
+                                
+                            </StackPanel>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Button x:Name="btnAddProduct"
+                Grid.Row="3"
+                Content="Добавить товар"
+                Width="120" Height="35"
+                HorizontalAlignment="Right"
+                Click="btnAddProduct_Click"/>
     </Grid>
 </Window>
