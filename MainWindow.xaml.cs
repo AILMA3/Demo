@@ -179,15 +179,27 @@ namespace Demo
         {
             if (App.CurrentUser.RoleId == 4 && listProducts.SelectedItem is Products selectedProduct)
             {
-                // TODO: Открыть окно редактирования товара
-                MessageBox.Show("Редактирование товара будет доступно в следующем этапе");
+                var editWindow = new ProductEditWindow(selectedProduct);
+                editWindow.Owner = this;
+                if (editWindow.ShowDialog() == true)
+                {
+                    // Обновляем список после редактирования
+                    LoadProducts();
+                }
+                // Снимаем выделение
+                listProducts.SelectedItem = null;
             }
         }
 
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Открыть окно добавления товара
-            MessageBox.Show("Добавление товара будет доступно в следующем этапе");
+            var editWindow = new ProductEditWindow();
+            editWindow.Owner = this;
+            if (editWindow.ShowDialog() == true)
+            {
+                // Обновляем список после добавления
+                LoadProducts();
+            }
         }
     }
 }
