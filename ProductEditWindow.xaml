@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Demo"
         mc:Ignorable="d"
-        Title="Редактирование товара" Height="650" Width="800"
+        Title="Редактирование товара" Height="700" Width="800"
         Closed="Window_Closed">
     <Grid Margin="5">
         <Grid.RowDefinitions>
@@ -22,7 +22,7 @@
             <TextBlock Text="ID товара:"/>
             <TextBox x:Name="txtId" IsReadOnly="True"/>
             <TextBlock Text="Фото товара:"/>
-            <Image x:Name="imgProduct" Source="{Binding DisplayImagePath, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Image x:Name="imgProduct" Height="100" Width="100"/>
             <StackPanel Orientation="Horizontal">
                 <Button Content="Выбрать изображение" Click="BtnSelectImage_Click" Height="30" Width="150"/>
                 <Button Content="Удалить изображение" Click="BtnDeleteImage_Click" Height="30" Width="150"/>
@@ -31,25 +31,28 @@
 
         <StackPanel Grid.Row="2">
             <TextBlock Text="Наименование товара:"/>
-            <TextBox x:Name="txtName"/>
+            <ComboBox x:Name="cmbName" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+
+            <TextBlock Text="Артикул товара:"/>
+            <TextBox x:Name="txtArticle"/>
 
             <TextBlock Text="Категория товара:"/>
-            <ComboBox x:Name="cmbCategory"/>
+            <ComboBox x:Name="cmbCategory" DisplayMemberPath="Name" SelectedValuePath="Id"/>
 
             <TextBlock Text="Описание товара:"/>
             <TextBox x:Name="txtDescription" TextWrapping="Wrap"/>
 
             <TextBlock Text="Производитель товара:"/>
-            <ComboBox x:Name="cmbManufacturer"/>
+            <ComboBox x:Name="cmbManufacturer" DisplayMemberPath="Name" SelectedValuePath="Id"/>
 
             <TextBlock Text="Поставщик товара:"/>
-            <ComboBox x:Name="cmbSupplier"/>
+            <ComboBox x:Name="cmbSupplier" DisplayMemberPath="Name" SelectedValuePath="Id"/>
 
             <TextBlock Text="Цена товара:"/>
             <TextBox x:Name="txtPrice"/>
 
             <TextBlock Text="Единица измерения товара:"/>
-            <ComboBox x:Name="cmbMeasure"/>
+            <ComboBox x:Name="cmbMeasure" DisplayMemberPath="Name" SelectedValuePath="Id"/>
 
             <TextBlock Text="Скидка на товар:"/>
             <TextBox x:Name="txtDiscount"/>

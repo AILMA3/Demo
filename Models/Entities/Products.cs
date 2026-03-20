@@ -16,8 +16,8 @@ public class Products
     [Key]
     public int Id { get; set; }
     public string Article { get; set; }
-    public virtual ProductNames ProductNames { get; set; }
-    public int NameId { get; set; }
+    public virtual ProductNames ProductName { get; set; }
+    public int ProductNameId { get; set; }
     public virtual ProductMeasures ProductMeasure { get; set; }
     public int ProductMeasureId { get; set; }
     public decimal Price { get; set; }

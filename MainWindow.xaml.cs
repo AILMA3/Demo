@@ -68,6 +68,7 @@ namespace Demo
                         .Include(p => p.ProductManufacturer)
                         .Include(p => p.ProductSupplier)
                         .Include(p => p.ProductMeasure)
+                        .Include(p => p.ProductName)
                         .ToList();
 
                     ApplyFiltersAndSort();
@@ -116,7 +117,7 @@ namespace Demo
             if (!string.IsNullOrEmpty(searchText))
             {
                 filtered = filtered.Where(p =>
-                    (p.ProductNames?.Name?.ToLower().Contains(searchText) ?? false) ||
+                    (p.ProductName?.Name?.ToLower().Contains(searchText) ?? false) ||
                     (p.Description?.ToLower().Contains(searchText) ?? false) ||
                     (p.ProductCategory?.Name?.ToLower().Contains(searchText) ?? false) ||
                     (p.ProductManufacturer?.Name?.ToLower().Contains(searchText) ?? false) ||

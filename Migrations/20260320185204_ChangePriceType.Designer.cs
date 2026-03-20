@@ -3,6 +3,7 @@ using System;
 using Demo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Demo.Migrations
 {
     [DbContext(typeof(ContextDB))]
-    partial class ContextDBModelSnapshot : ModelSnapshot
+    [Migration("20260320185204_ChangePriceType")]
+    partial class ChangePriceType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,6 +242,9 @@ namespace Demo.Migrations
                     b.Property<int>("Discount")
                         .HasColumnType("integer");
 
+                    b.Property<int>("NameId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PhotoName")
                         .HasColumnType("text");
 
@@ -254,7 +260,7 @@ namespace Demo.Migrations
                     b.Property<int>("ProductMeasureId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProductNameId")
+                    b.Property<int>("ProductNamesId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProductSupplierId")
@@ -268,7 +274,7 @@ namespace Demo.Migrations
 
                     b.HasIndex("ProductMeasureId");
 
-                    b.HasIndex("ProductNameId");
+                    b.HasIndex("ProductNamesId");
 
                     b.HasIndex("ProductSupplierId");
 
@@ -388,9 +394,9 @@ namespace Demo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Demo.Models.Entities.ProductNames", "ProductName")
+                    b.HasOne("Demo.Models.Entities.ProductNames", "ProductNames")
                         .WithMany()
-                        .HasForeignKey("ProductNameId")
+                        .HasForeignKey("ProductNamesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -406,7 +412,7 @@ namespace Demo.Migrations
 
                     b.Navigation("ProductMeasure");
 
-                    b.Navigation("ProductName");
+                    b.Navigation("ProductNames");
 
                     b.Navigation("ProductSupplier");
                 });

@@ -57,7 +57,7 @@ namespace Demo
             {
                 txtWindowTitle.Text = "Добавление товара";
                 txtId.Text = "(новый)";
-                imgProduct.Source = LoadImage(null);
+                imgProduct.Source = new BitmapImage(new Uri(currentProduct.DisplayImagePath));
             }
         }
 
@@ -67,10 +67,11 @@ namespace Demo
             {
                 using (var context = new ContextDB())
                 {
-                    cmbCategory.ItemsSource = context.ProductCategorys.ToList();
+                    cmbCategory.ItemsSource = context.ProductCategories.ToList();
                     cmbManufacturer.ItemsSource = context.ProductManufacturers.ToList();
                     cmbSupplier.ItemsSource = context.ProductSuppliers.ToList();
                     cmbMeasure.ItemsSource = context.ProductMeasures.ToList();
+                    cmbName.ItemsSource = context.ProductNames.ToList();
                 }
             }
             catch (Exception ex)
@@ -82,46 +83,27 @@ namespace Demo
         private void LoadProductData()
         {
             txtId.Text = currentProduct.Id.ToString();
-            txtName.Text = currentProduct.ProductNames.Name;
+            txtArticle.Text = currentProduct.Article;
             txtDescription.Text = currentProduct.Description;
             txtPrice.Text = currentProduct.Price.ToString();
             txtCount.Text = currentProduct.Count.ToString();
             txtDiscount.Text = currentProduct.Discount.ToString();
 
+            cmbName.SelectedValue = currentProduct.ProductNameId;
             cmbCategory.SelectedValue = currentProduct.ProductCategoryId;
             cmbManufacturer.SelectedValue = currentProduct.ProductManufacturerId;
             cmbSupplier.SelectedValue = currentProduct.ProductSupplierId;
             cmbMeasure.SelectedValue = currentProduct.ProductMeasureId;
 
             originalImagePath = currentProduct.PhotoName;
-            imgProduct.Source = LoadImage(currentProduct.PhotoName);
-        }
-
-        private BitmapImage LoadImage(string path)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(path) && File.Exists(path))
-                {
-                    var bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
-                    bitmap.EndInit();
-                    return bitmap;
-                }
-            }
-            catch { }
-
-            // Заглушка
-            return new BitmapImage(new Uri("pack://application:,,,/Resources/picture.png"));
+            imgProduct.Source = new BitmapImage(new Uri(currentProduct.DisplayImagePath));
         }
 
         private void BtnSelectImage_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog
             {
-                Filter = "Image files|*.jpg;*.jpeg;*.png;*.bmp",
+                Filter = "Image files|*.jpg;*.png",
                 Title = "Выберите изображение товара"
             };
 
@@ -133,7 +115,7 @@ namespace Demo
                     var image = new BitmapImage(new Uri(dialog.FileName));
 
                     // Проверяем размер и ресайзим если нужно
-                    if (image.PixelWidth > 300 || image.PixelHeight > 200)
+                    if (image.PixelWidth > 600 || image.PixelHeight > 600)
                     {
                         throw new Exception("Изображение слишком высокого качества");
                     }
@@ -150,7 +132,7 @@ namespace Demo
 
         private void BtnDeleteImage_Click(object sender, RoutedEventArgs e)
         {
-            imgProduct.Source = LoadImage(null);
+            imgProduct.Source = null;
             isImageChanged = true;
         }
 
@@ -164,12 +146,13 @@ namespace Demo
                 using (var context = new ContextDB())
                 {
                     // Заполняем данные
-                    currentProduct.ProductNames.Name = txtName.Text.Trim();
+                    currentProduct.Article = txtArticle.Text.Trim();
                     currentProduct.Description = txtDescription.Text.Trim();
-                    currentProduct.Price = int.Parse(txtPrice.Text);
+                    currentProduct.Price = decimal.Parse(txtPrice.Text);
                     currentProduct.Count = int.Parse(txtCount.Text);
                     currentProduct.Discount = int.Parse(txtDiscount.Text);
 
+                    currentProduct.ProductNameId = (int)cmbName.SelectedValue;
                     currentProduct.ProductCategoryId = (int)cmbCategory.SelectedValue;
                     currentProduct.ProductManufacturerId = (int)cmbManufacturer.SelectedValue;
                     currentProduct.ProductSupplierId = (int)cmbSupplier.SelectedValue;
@@ -178,14 +161,10 @@ namespace Demo
                     // Обработка изображения
                     if (isImageChanged)
                     {
-                        // Удаляем старое фото если есть
-                        if (!string.IsNullOrEmpty(originalImagePath) && File.Exists(originalImagePath))
-                        {
-                            File.Delete(originalImagePath);
-                        }
+                        currentProduct.PhotoName = null;
 
                         // Сохраняем новое фото
-                        if (imgProduct.Source is BitmapImage bitmap && bitmap.UriSource != null)
+                        if (imgProduct.Source is BitmapImage bitmap)
                         {
                             string fileName = $"{Guid.NewGuid()}.jpg";
                             string savePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", fileName);
@@ -194,10 +173,6 @@ namespace Demo
                             File.Copy(bitmap.UriSource.LocalPath, savePath, true);
 
                             currentProduct.PhotoName = savePath;
-                        }
-                        else
-                        {
-                            currentProduct.PhotoName = null;
                         }
                     }
 
@@ -214,12 +189,27 @@ namespace Demo
                     context.SaveChanges();
 
                     DialogResult = true;
+
+                    if (isImageChanged)
+                    {
+                        // Удаляем старое фото
+                        if (!string.IsNullOrEmpty(originalImagePath))
+                        {
+                            File.Delete(originalImagePath);
+                        }
+                    }
+
                     this.Close();
                 }
             }
             catch (Exception ex)
             {
-                ShowError($"Ошибка сохранения: {ex.Message}");
+                string errorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $"\n\nВнутренняя ошибка: {ex.InnerException.Message}";
+                }
+                ShowError($"Ошибка сохранения: {errorMessage}");
             }
         }
 
@@ -231,11 +221,11 @@ namespace Demo
 
         private bool ValidateInput()
         {
-            // Проверка обязательных полей
-            if (string.IsNullOrWhiteSpace(txtName.Text))
+            // Проверка артикля
+            if(txtArticle.Text.Trim().Length == 0)
             {
-                ShowError("Введите наименование товара");
-                txtName.Focus();
+                ShowError("Артикул должен быть заполнен");
+                txtArticle.Focus();
                 return false;
             }
 
@@ -256,7 +246,7 @@ namespace Demo
             }
 
             // Проверка скидки
-            if (!decimal.TryParse(txtDiscount.Text, out decimal discount) || discount < 0 || discount > 100)
+            if (!int.TryParse(txtDiscount.Text, out int discount) || discount < 0 || discount > 100)
             {
                 ShowError("Скидка должна быть числом от 0 до 100");
                 txtDiscount.Focus();
@@ -264,6 +254,12 @@ namespace Demo
             }
 
             // Проверка выбора из списков
+            if (cmbName.SelectedValue == null)
+            {
+                ShowError("Выберите название товара");
+                return false;
+            }
+
             if (cmbCategory.SelectedValue == null)
             {
                 ShowError("Выберите категорию товара");

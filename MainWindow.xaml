@@ -62,11 +62,6 @@
         <ListBox x:Name="listProducts"
                  Grid.Row="2"
                  SelectionChanged="listProducts_SelectionChanged">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
 
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -103,7 +98,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding ProductCategory.Name}" FontWeight="Bold"/>
                                     <TextBlock Text=" | "/>
-                                    <TextBlock Text="{Binding ProductNames.Name}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding ProductName.Name}" FontWeight="Bold"/>
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal">
