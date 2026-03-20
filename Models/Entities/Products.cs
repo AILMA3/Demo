@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Linq;
 using System.Security.RightsManagement;
 using System.Text;
@@ -19,7 +20,7 @@ public class Products
     public int NameId { get; set; }
     public virtual ProductMeasures ProductMeasure { get; set; }
     public int ProductMeasureId { get; set; }
-    public int Price { get; set; }
+    public decimal Price { get; set; }
     public virtual ProductSuppliers ProductSupplier { get; set; }
     public int ProductSupplierId { get; set; }
     public virtual ProductManufacturers ProductManufacturer { get; set; }
@@ -42,5 +43,19 @@ public class Products
 
     [NotMapped]
     public bool IsHighDiscount => Discount > 15;
+
+    [NotMapped]
+    public string DisplayImagePath
+    {
+        get
+        {
+            // Если есть путь и файл существует - используем его
+            if (!string.IsNullOrEmpty(PhotoName) && File.Exists(PhotoName))
+                return PhotoName;
+
+            // Иначе возвращаем путь к заглушке
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "picture.png");
+        }
+    }
 }
 

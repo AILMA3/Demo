@@ -17,7 +17,7 @@ public class ContextDB : DbContext
     public DbSet<ProductMeasures> ProductMeasures { get; set; }
     public DbSet<ProductSuppliers> ProductSuppliers { get; set; }
     public DbSet<ProductManufacturers> ProductManufacturers { get; set; }
-    public DbSet<ProductCategories> ProductCategorys { get; set; }
+    public DbSet<ProductCategories> ProductCategories { get; set; }
     public DbSet<Orders> Orders { get; set; }
     public DbSet<OrderItems> OrderItems { get; set; }   
     public DbSet<OrderStatuses> OrderStatuses { get; set; }
