@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Demo"
         mc:Ignorable="d"
-        Title="Редактирование товара" Height="700" Width="800"
-        Closed="Window_Closed">
+        Title="Редактирование товара" Height="700" Width="800">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -65,6 +64,7 @@
 
             <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Сохранить" Width="100" Height="30" Click="BtnSave_Click"/>
+                <Button x:Name="btnDelete" Content="Удалить товар" Width="100" Height="30" Click="BtnDelete_Click" Visibility="Collapsed"/>
                 <Button Content="Отмена" Width="100" Height="30" Click="BtnCancel_Click"/>
             </StackPanel>
         </StackPanel>

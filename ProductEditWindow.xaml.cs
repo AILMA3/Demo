@@ -28,21 +28,11 @@ namespace Demo
         private string originalImagePath;
         private bool isImageChanged = false;
 
-        private static bool isWindowOpen = false;
-
 
         public ProductEditWindow(Products product = null)
         {
-            if (isWindowOpen)
-            {
-                MessageBox.Show("Окно редактирования товара уже открыто");
-                this.Close();
-                return;
-            }
-
             InitializeComponent();
 
-            isWindowOpen = true;
             currentProduct = product ?? new Products();
             isEditMode = product != null;
 
@@ -51,6 +41,7 @@ namespace Demo
             if (isEditMode)
             {
                 txtWindowTitle.Text = "Редактирование товара";
+                btnDelete.Visibility = Visibility.Visible;
                 LoadProductData();
             }
             else
@@ -136,6 +127,18 @@ namespace Demo
             isImageChanged = true;
         }
 
+        private void DeleteOriginalImage()
+        {
+            if (isImageChanged)
+            {
+                // Удаляем старое фото
+                if (!string.IsNullOrEmpty(originalImagePath))
+                {
+                    File.Delete(originalImagePath);
+                }
+            }
+        }
+
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidateInput())
@@ -188,28 +191,14 @@ namespace Demo
 
                     context.SaveChanges();
 
+                    DeleteOriginalImage();
                     DialogResult = true;
-
-                    if (isImageChanged)
-                    {
-                        // Удаляем старое фото
-                        if (!string.IsNullOrEmpty(originalImagePath))
-                        {
-                            File.Delete(originalImagePath);
-                        }
-                    }
-
                     this.Close();
                 }
             }
             catch (Exception ex)
             {
-                string errorMessage = ex.Message;
-                if (ex.InnerException != null)
-                {
-                    errorMessage += $"\n\nВнутренняя ошибка: {ex.InnerException.Message}";
-                }
-                ShowError($"Ошибка сохранения: {errorMessage}");
+                ShowError($"Ошибка сохранения: {ex.Message}");
             }
         }
 
@@ -292,9 +281,44 @@ namespace Demo
             txtError.Text = message;
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
-            isWindowOpen = false;
+            var result = MessageBox.Show($"Удалить товар '{currentProduct.ProductName.Name}'?\n\nВНИМАНИЕ: Если товар присутствует в заказах, удаление будет невозможно!",
+                "Подтверждение удаления",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (var context = new ContextDB())
+                    {
+                        // Проверяем, есть ли товар в заказах
+                        var isInOrders = context.OrderItems.Any(oi => oi.ProductId == currentProduct.Id);
+
+                        if (isInOrders)
+                        {
+                            MessageBox.Show("Товар нельзя удалить, так как он присутствует в заказах",
+                                "Ошибка",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                            return;
+                        }
+
+                        context.Products.Remove(currentProduct);
+                        context.SaveChanges();
+                    }
+
+                    DeleteOriginalImage();
+                    DialogResult = true;
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    ShowError($"Ошибка удаления: {ex.Message}");
+                }
+            }
         }
     }
 }
