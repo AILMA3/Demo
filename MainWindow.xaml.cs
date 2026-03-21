@@ -181,7 +181,6 @@ namespace Demo
             if (App.CurrentUser.RoleId == 4 && listProducts.SelectedItem is Products selectedProduct)
             {
                 var editWindow = new ProductEditWindow(selectedProduct);
-                editWindow.Owner = this;
                 if (editWindow.ShowDialog() == true)
                 {
                     // Обновляем список после редактирования
@@ -195,7 +194,6 @@ namespace Demo
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
             var editWindow = new ProductEditWindow();
-            editWindow.Owner = this;
             if (editWindow.ShowDialog() == true)
             {
                 // Обновляем список после добавления
