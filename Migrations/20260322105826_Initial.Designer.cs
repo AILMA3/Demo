@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Demo.Migrations
 {
     [DbContext(typeof(ContextDB))]
-    [Migration("20260311162005_ChangeAttributeNames")]
-    partial class ChangeAttributeNames
+    [Migration("20260322105826_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,8 +62,9 @@ namespace Demo.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Name")
-                        .HasColumnType("integer");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -87,9 +88,6 @@ namespace Demo.Migrations
                     b.Property<DateOnly>("OrderDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("OrderStatusId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("PickupPointId")
                         .HasColumnType("integer");
 
@@ -101,9 +99,9 @@ namespace Demo.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderStatusId");
-
                     b.HasIndex("PickupPointId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -149,7 +147,7 @@ namespace Demo.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategorys");
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Demo.Models.Entities.ProductManufacturers", b =>
@@ -242,14 +240,11 @@ namespace Demo.Migrations
                     b.Property<int>("Discount")
                         .HasColumnType("integer");
 
-                    b.Property<int>("NameId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("PhotoName")
                         .HasColumnType("text");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
 
                     b.Property<int>("ProductCategoryId")
                         .HasColumnType("integer");
@@ -260,7 +255,7 @@ namespace Demo.Migrations
                     b.Property<int>("ProductMeasureId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProductNamesId")
+                    b.Property<int>("ProductNameId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProductSupplierId")
@@ -274,7 +269,7 @@ namespace Demo.Migrations
 
                     b.HasIndex("ProductMeasureId");
 
-                    b.HasIndex("ProductNamesId");
+                    b.HasIndex("ProductNameId");
 
                     b.HasIndex("ProductSupplierId");
 
@@ -331,7 +326,7 @@ namespace Demo.Migrations
             modelBuilder.Entity("Demo.Models.Entities.OrderItems", b =>
                 {
                     b.HasOne("Demo.Models.Entities.Orders", "Order")
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -349,15 +344,15 @@ namespace Demo.Migrations
 
             modelBuilder.Entity("Demo.Models.Entities.Orders", b =>
                 {
-                    b.HasOne("Demo.Models.Entities.OrderStatuses", "OrderStatus")
-                        .WithMany()
-                        .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Demo.Models.Entities.PickupPoints", "PickupPoint")
                         .WithMany()
                         .HasForeignKey("PickupPointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Demo.Models.Entities.OrderStatuses", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -367,9 +362,9 @@ namespace Demo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OrderStatus");
-
                     b.Navigation("PickupPoint");
+
+                    b.Navigation("Status");
 
                     b.Navigation("User");
                 });
@@ -394,9 +389,9 @@ namespace Demo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Demo.Models.Entities.ProductNames", "ProductNames")
+                    b.HasOne("Demo.Models.Entities.ProductNames", "ProductName")
                         .WithMany()
-                        .HasForeignKey("ProductNamesId")
+                        .HasForeignKey("ProductNameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -412,7 +407,7 @@ namespace Demo.Migrations
 
                     b.Navigation("ProductMeasure");
 
-                    b.Navigation("ProductNames");
+                    b.Navigation("ProductName");
 
                     b.Navigation("ProductSupplier");
                 });
@@ -426,6 +421,11 @@ namespace Demo.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Demo.Models.Entities.Orders", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -18,7 +18,7 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StatusName = table.Column<int>(type: "integer", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,16 +41,16 @@ namespace Demo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductCategorys",
+                name: "ProductCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductCategoryName = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCategorys", x => x.Id);
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +59,7 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductManufacturerName = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,7 +72,7 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductMeasureName = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,7 +85,7 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductName = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,7 +98,7 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductSupplierName = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -111,7 +111,7 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleName = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,11 +122,12 @@ namespace Demo.Migrations
                 name: "Products",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Article = table.Column<string>(type: "text", nullable: false),
-                    ProductNamesId = table.Column<int>(type: "integer", nullable: false),
-                    NameId = table.Column<int>(type: "integer", nullable: false),
+                    ProductNameId = table.Column<int>(type: "integer", nullable: false),
                     ProductMeasureId = table.Column<int>(type: "integer", nullable: false),
-                    Price = table.Column<int>(type: "integer", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
                     ProductSupplierId = table.Column<int>(type: "integer", nullable: false),
                     ProductManufacturerId = table.Column<int>(type: "integer", nullable: false),
                     ProductCategoryId = table.Column<int>(type: "integer", nullable: false),
@@ -137,11 +138,11 @@ namespace Demo.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Article);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_ProductCategorys_ProductCategoryId",
+                        name: "FK_Products_ProductCategories_ProductCategoryId",
                         column: x => x.ProductCategoryId,
-                        principalTable: "ProductCategorys",
+                        principalTable: "ProductCategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -157,8 +158,8 @@ namespace Demo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Products_ProductNames_ProductNamesId",
-                        column: x => x.ProductNamesId,
+                        name: "FK_Products_ProductNames_ProductNameId",
+                        column: x => x.ProductNameId,
                         principalTable: "ProductNames",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -179,15 +180,14 @@ namespace Demo.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Login = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
-                    RoleId1 = table.Column<int>(type: "integer", nullable: false),
-                    RoleId = table.Column<string>(type: "text", nullable: false)
+                    RoleId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Roles_RoleId1",
-                        column: x => x.RoleId1,
+                        name: "FK_Users_Roles_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -200,19 +200,18 @@ namespace Demo.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     OrderDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    Deliverydate = table.Column<DateOnly>(type: "date", nullable: false),
+                    DeliveryDate = table.Column<DateOnly>(type: "date", nullable: false),
                     PickupPointId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     Code = table.Column<int>(type: "integer", nullable: false),
-                    OrderStatusId = table.Column<int>(type: "integer", nullable: false),
                     StatusId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_OrderStatuses_OrderStatusId",
-                        column: x => x.OrderStatusId,
+                        name: "FK_Orders_OrderStatuses_StatusId",
+                        column: x => x.StatusId,
                         principalTable: "OrderStatuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -237,8 +236,7 @@ namespace Demo.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     OrderId = table.Column<int>(type: "integer", nullable: false),
-                    ProductArticle = table.Column<string>(type: "text", nullable: false),
-                    ProductName = table.Column<string>(type: "text", nullable: false),
+                    ProductId = table.Column<int>(type: "integer", nullable: false),
                     Count = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -251,10 +249,10 @@ namespace Demo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Products_ProductArticle",
-                        column: x => x.ProductArticle,
+                        name: "FK_OrderItems_Products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Article",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -264,19 +262,19 @@ namespace Demo.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_ProductArticle",
+                name: "IX_OrderItems_ProductId",
                 table: "OrderItems",
-                column: "ProductArticle");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_OrderStatusId",
-                table: "Orders",
-                column: "OrderStatusId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_PickupPointId",
                 table: "Orders",
                 column: "PickupPointId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_StatusId",
+                table: "Orders",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
@@ -299,9 +297,9 @@ namespace Demo.Migrations
                 column: "ProductMeasureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductNamesId",
+                name: "IX_Products_ProductNameId",
                 table: "Products",
-                column: "ProductNamesId");
+                column: "ProductNameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ProductSupplierId",
@@ -309,9 +307,9 @@ namespace Demo.Migrations
                 column: "ProductSupplierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId1",
+                name: "IX_Users_RoleId",
                 table: "Users",
-                column: "RoleId1");
+                column: "RoleId");
         }
 
         /// <inheritdoc />
@@ -336,7 +334,7 @@ namespace Demo.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "ProductCategorys");
+                name: "ProductCategories");
 
             migrationBuilder.DropTable(
                 name: "ProductManufacturers");
