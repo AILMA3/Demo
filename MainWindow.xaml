@@ -165,11 +165,15 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Button x:Name="btnAddProduct"
-                Grid.Row="3"
+        <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button x:Name="btnAddProduct"
                 Content="Добавить товар"
                 Width="120" Height="35"
-                HorizontalAlignment="Right"
                 Click="btnAddProduct_Click"/>
+            <Button x:Name="btnOpenOrders"
+                Content="Заказы"
+                Width="120" Height="35"
+                Click="btnOpenOrders_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

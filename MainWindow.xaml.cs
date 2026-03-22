@@ -43,6 +43,10 @@ namespace Demo
             btnAddProduct.Visibility = App.CurrentUser.RoleId == 4
                 ? Visibility.Visible
                 : Visibility.Collapsed;
+
+            btnOpenOrders.Visibility = App.CurrentUser.RoleId == 4
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         private void DisplayUserInfo()
@@ -199,6 +203,12 @@ namespace Demo
                 // Обновляем список после добавления
                 LoadProducts();
             }
+        }
+
+        private void btnOpenOrders_Click(object sender, RoutedEventArgs e)
+        {
+            var ordersWindow = new OrdersWindow();
+            ordersWindow.ShowDialog();
         }
     }
 }
