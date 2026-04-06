@@ -26,7 +26,7 @@ public class ContextDB : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseLazyLoadingProxies();
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=Demo;Username=user;Password=");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=Demo;Username=postgres;Password=");
     }
 
 }

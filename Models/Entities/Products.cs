@@ -49,12 +49,21 @@ public class Products
     {
         get
         {
-            // Если есть путь и файл существует - используем его
-            if (!string.IsNullOrEmpty(PhotoName) && File.Exists(PhotoName))
-                return PhotoName;
+            // Путь к папке с изображениями
+            string imageFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
 
-            // Иначе возвращаем путь к заглушке
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "picture.png");
+            // Если есть имя файла, ищем его в папке Images
+            if (!string.IsNullOrEmpty(PhotoName))
+            {
+                // Полный путь к файлу
+                string fullPath = Path.Combine(imageFolder, PhotoName);
+
+                // Проверяем существование файла
+                if (File.Exists(fullPath))
+                    return fullPath;
+            }
+
+            return Path.Combine(imageFolder, "picture.png");
         }
     }
 }
