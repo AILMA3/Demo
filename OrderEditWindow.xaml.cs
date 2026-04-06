@@ -166,6 +166,11 @@ namespace Demo
                     currentOrder.OrderDate = DateOnly.FromDateTime(dpOrderDate.SelectedDate ?? DateTime.Now);
                     currentOrder.DeliveryDate = DateOnly.FromDateTime((DateTime)dpDeliveryDate.SelectedDate);
 
+                    // Обнуляем навигационные свойства, чтобы EF не перезаписал ID
+                    currentOrder.Status = null;
+                    currentOrder.PickupPoint = null;
+                    currentOrder.User = null;
+
                     if (isEditMode)
                     {
                         // Удаляем старые позиции заказа

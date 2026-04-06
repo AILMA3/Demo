@@ -170,6 +170,13 @@ namespace Demo
                     currentProduct.ProductSupplierId = (int)cmbSupplier.SelectedValue;
                     currentProduct.ProductMeasureId = (int)cmbMeasure.SelectedValue;
 
+                    // Обнуляем навигационные свойства, чтобы EF не перезаписал ID
+                    currentProduct.ProductName = null;
+                    currentProduct.ProductCategory = null;
+                    currentProduct.ProductManufacturer = null;
+                    currentProduct.ProductSupplier = null;
+                    currentProduct.ProductMeasure = null;
+
                     // Обработка изображения
                     if (isImageChanged)
                     {
