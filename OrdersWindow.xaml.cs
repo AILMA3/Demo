@@ -29,7 +29,7 @@ namespace Demo
             InitializeComponent();
             LoadOrders();
 
-            btnAddOrder.Visibility = App.CurrentUser.RoleId == 4
+            btnAddOrder.Visibility = App.CurrentUser.RoleId == 1
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
@@ -59,7 +59,7 @@ namespace Demo
 
         private void listOrders_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (App.CurrentUser.RoleId == 4 && listOrders.SelectedItem is Orders selectedOrder)
+            if (App.CurrentUser.RoleId == 1 && listOrders.SelectedItem is Orders selectedOrder)
             {
                 var editWindow = new OrderEditWindow(selectedOrder);
                 if (editWindow.ShowDialog() == true)

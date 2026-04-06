@@ -34,24 +34,24 @@ namespace Demo
 
         private void ConfigureUIBasedOnRole()
         {
-            if (App.CurrentUser.RoleId == 3 || App.CurrentUser.RoleId == 4)
+            if (App.CurrentUser.RoleId == 1 || App.CurrentUser.RoleId == 2)
             {
                 panelFilters.Visibility = Visibility.Visible;
             }
             else { panelFilters.Visibility = Visibility.Collapsed;}
 
-            btnAddProduct.Visibility = App.CurrentUser.RoleId == 4
+            btnAddProduct.Visibility = App.CurrentUser.RoleId == 1
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 
-            btnOpenOrders.Visibility = App.CurrentUser.RoleId == 4
+            btnOpenOrders.Visibility = App.CurrentUser.RoleId == 1
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
 
         private void DisplayUserInfo()
         {
-            if (App.CurrentUser.RoleId == 1) // Гость
+            if (App.CurrentUser.RoleId == 4) // Гость
             {
                 txtUserInfo.Text = "Вы вошли как: Гость";
             }
@@ -182,7 +182,7 @@ namespace Demo
 
         private void listProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (App.CurrentUser.RoleId == 4 && listProducts.SelectedItem is Products selectedProduct)
+            if (App.CurrentUser.RoleId == 1 && listProducts.SelectedItem is Products selectedProduct)
             {
                 var editWindow = new ProductEditWindow(selectedProduct);
                 if (editWindow.ShowDialog() == true)

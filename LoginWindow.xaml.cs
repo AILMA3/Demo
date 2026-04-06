@@ -66,7 +66,7 @@ namespace Demo
             {
                 Id = 0,
                 Name = "Гость",
-                RoleId = 1
+                RoleId = 4
             };
 
             OpenMainWindow();

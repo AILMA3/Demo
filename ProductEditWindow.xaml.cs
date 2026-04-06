@@ -113,6 +113,15 @@ namespace Demo
 
                     imgProduct.Source = image;
                     isImageChanged = true;
+
+                    string fileName = $"{Guid.NewGuid()}.jpg";
+
+                    // Путь к папке Images
+                    string imagesPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
+                    string savePath = System.IO.Path.Combine(imagesPath, fileName);
+
+                    // Копируем файл
+                    File.Copy(dialog.FileName, savePath, true);
                 }
                 catch (Exception ex)
                 {
