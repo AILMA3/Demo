@@ -106,7 +106,7 @@ namespace Demo
                     var image = new BitmapImage(new Uri(dialog.FileName));
 
                     // Проверяем размер и ресайзим если нужно
-                    if (image.PixelWidth > 600 || image.PixelHeight > 600)
+                    if (image.PixelWidth > 300 || image.PixelHeight > 200)
                     {
                         throw new Exception("Изображение слишком высокого качества");
                     }
